@@ -38,8 +38,8 @@ def addSkeletalAnimationTrackOnPossessable(animation_path='', possessable=None):
 
 def addObjectToWorld(asset):
     unreal.EditorLevelLibrary.spawn_actor_from_object(object_to_use=asset,
-                                                      location=(0, 0, 0),
-                                                      rotation=(0, 0, 0))
+                                                      location=unreal.Vector(0, 0, 0),
+                                                      rotation=unreal.Rotator(0, 0, 0))
 
 def addSkeletalAnimationTrackOnActor_EXAMPLE(asset, sequence_path, animation_path):
     # sequence_path = '/Game/VisualTech/Seq/s03_c010'

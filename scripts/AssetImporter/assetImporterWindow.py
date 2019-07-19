@@ -1,7 +1,7 @@
 import site
 site.addsitedir("C:/Python27/Lib/site-packages")
 from PySide import QtGui, QtUiTools
-import AssetFunctions
+import PythonLibraries.AssetFunctions
 
 WINDOW_NAME = "VT Asset Importer"
 UI_FILE_FULLNAME = "C:/Users/kayamayan/Documents/visual_tech/Unreal/scripts/AssetImporter/ui/mainWindow.ui"
@@ -35,15 +35,15 @@ class AssetImporterWindow(QtGui.QWidget):
 
     def importCharacter(self):
         characterAsset = str(self.widget.characterAssetPath_lineEdit.text())
-        options = AssetFunctions.buildSkeletalMeshImportOptions()
-        task = AssetFunctions.buildImportTask(filename=characterAsset, destination_path='/Game/VisualTech/Character', options=options)
-        AssetFunctions.executeImportTasks([task])
+        options = PythonLibraries.AssetFunctions.buildSkeletalMeshImportOptions()
+        task = PythonLibraries.AssetFunctions.buildImportTask(filename=characterAsset, destination_path='/Game/VisualTech/Character', options=options)
+        PythonLibraries.AssetFunctions.executeImportTasks([task])
 
     def importAnim(self):
         animAsset = str(self.widget.animAssetPath_lineEdit.text())
         skeletalPath = str(self.widget.skeletalPath_lineEdit.text())
-        options = AssetFunctions.buildAnimationImportOptions(skeleton_path=skeletalPath)
-        task = AssetFunctions.buildImportTask(filename=animAsset,
+        options = PythonLibraries.AssetFunctions.buildAnimationImportOptions(skeleton_path=skeletalPath)
+        task = PythonLibraries.AssetFunctions.buildImportTask(filename=animAsset,
                                               destination_path='/Game/VisualTech/Animation',
                                               options=options)
-        AssetFunctions.executeImportTasks([task])
+        PythonLibraries.AssetFunctions.executeImportTasks([task])

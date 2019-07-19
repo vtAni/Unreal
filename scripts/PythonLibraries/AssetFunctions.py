@@ -58,6 +58,7 @@
 
 import unreal
 
+
 # asset_path: str : Path of asset to create
 # unique_name: bool : If True, will add a number at the end of the asset name until unique
 # asset_class: obj unreal.Class : The asset class
@@ -65,11 +66,13 @@ import unreal
 # return: obj : The created asset
 def createGenericAsset(asset_path='', unique_name=True, asset_class=None, asset_factory=None):
     if unique_name:
-        asset_path, asset_name = unreal.AssetToolsHelpers.get_asset_tools().create_unique_asset_name(base_package_name=asset_path, suffix='')
+        asset_path, asset_name = unreal.AssetToolsHelpers.get_asset_tools().create_unique_asset_name(
+            base_package_name=asset_path, suffix='')
     if not unreal.EditorAssetLibrary.does_asset_exist(asset_path=asset_path):
         path = asset_path.rsplit('/', 1)[0]
         name = asset_path.rsplit('/', 1)[1]
-        return unreal.AssetToolsHelpers.get_asset_tools().create_asset(asset_name=name, package_path=path, asset_class=asset_class, factory=asset_factory)
+        return unreal.AssetToolsHelpers.get_asset_tools().create_asset(asset_name=name, package_path=path,
+                                                                       asset_class=asset_class, factory=asset_factory)
     return unreal.load_asset(asset_path)
 
 
@@ -94,7 +97,8 @@ def createDirectory(path=''):
 # to_dir: str : Duplicated directory path
 # return: bool : True if the operation succeeds
 def duplicateDirectory(from_dir='', to_dir=''):
-    return unreal.EditorAssetLibrary.duplicate_directory(source_directory_path=from_dir, destination_directory_path=to_dir)
+    return unreal.EditorAssetLibrary.duplicate_directory(source_directory_path=from_dir,
+                                                         destination_directory_path=to_dir)
 
 
 # path: str : Directory path
@@ -152,9 +156,13 @@ def duplicateAssetDialog(from_path='', to_path='', show_dialog=True):
     asset_path = splitted_path[0]
     asset_name = splitted_path[1]
     if show_dialog:
-        return unreal.AssetToolsHelpers.get_asset_tools().duplicate_asset_with_dialog(asset_name=asset_name, package_path=asset_path, original_object=getPackageFromPath(from_path))
+        return unreal.AssetToolsHelpers.get_asset_tools().duplicate_asset_with_dialog(asset_name=asset_name,
+                                                                                      package_path=asset_path,
+                                                                                      original_object=getPackageFromPath(
+                                                                                          from_path))
     else:
-        return unreal.duplicate_asset.get_asset_tools().duplicate_asset(asset_name=asset_name, package_path=asset_path, original_object=getPackageFromPath(from_path))
+        return unreal.duplicate_asset.get_asset_tools().duplicate_asset(asset_name=asset_name, package_path=asset_path,
+                                                                        original_object=getPackageFromPath(from_path))
 
 
 # Note: This function will also work on assets of the type level. (But might be really slow if the level is huge)
@@ -166,7 +174,8 @@ def renameAssetDialog(from_path='', to_path='', show_dialog=True):
     splitted_path = to_path.rsplit('/', 1)
     asset_path = splitted_path[0]
     asset_name = splitted_path[1]
-    rename_data = unreal.AssetRenameData(asset=getPackageFromPath(from_path), new_package_path=asset_path, new_name=asset_name)
+    rename_data = unreal.AssetRenameData(asset=getPackageFromPath(from_path), new_package_path=asset_path,
+                                         new_name=asset_name)
     if show_dialog:
         return unreal.AssetToolsHelpers.get_asset_tools().rename_assets_with_dialog(assets_and_names=[rename_data])
     else:
@@ -176,13 +185,14 @@ def renameAssetDialog(from_path='', to_path='', show_dialog=True):
 # path: str : Asset path
 # return: bool : True if the operation succeeds
 def saveAsset(path='', force_save=True):
-    return unreal.EditorAssetLibrary.save_asset(asset_to_save=path, only_if_is_dirty = not force_save)
+    return unreal.EditorAssetLibrary.save_asset(asset_to_save=path, only_if_is_dirty=not force_save)
 
 
 # path: str : Directory path
 # return: bool : True if the operation succeeds
 def saveDirectory(path='', force_save=True, recursive=True):
-    return unreal.EditorAssetLibrary.save_directory(directory_path=path, only_if_is_dirty=not force_save, recursive=recursive)
+    return unreal.EditorAssetLibrary.save_directory(directory_path=path, only_if_is_dirty=not force_save,
+                                                    recursive=recursive)
 
 
 # path: str : Asset path
@@ -205,18 +215,22 @@ def getAllDirtyPackages():
 # return: bool : True if the operation succeeds
 def saveAllDirtyPackages(show_dialog=False):
     if show_dialog:
-        return unreal.EditorLoadingAndSavingUtils.save_dirty_packages_with_dialog(save_map_packages=True, save_content_packages=True)
+        return unreal.EditorLoadingAndSavingUtils.save_dirty_packages_with_dialog(save_map_packages=True,
+                                                                                  save_content_packages=True)
     else:
-        return unreal.EditorLoadingAndSavingUtils.save_dirty_packages(save_map_packages=True, save_content_packages=True)
+        return unreal.EditorLoadingAndSavingUtils.save_dirty_packages(save_map_packages=True,
+                                                                      save_content_packages=True)
 
 
 # show_dialog: bool : True if you want to see the confirm pop-up
 # return: bool : True if the operation succeeds
 def savePackages(packages=[], show_dialog=False):
     if show_dialog:
-        return unreal.EditorLoadingAndSavingUtils.save_packages_with_dialog(packages_to_save=packages, only_dirty=False) # only_dirty=False :
-    else:                                                                                                                # looks like that it's not
-        return unreal.EditorLoadingAndSavingUtils.save_packages(packages_to_save=packages, only_dirty=False)             # working properly at the moment
+        return unreal.EditorLoadingAndSavingUtils.save_packages_with_dialog(packages_to_save=packages,
+                                                                            only_dirty=False)  # only_dirty=False :
+    else:  # looks like that it's not
+        return unreal.EditorLoadingAndSavingUtils.save_packages(packages_to_save=packages,
+                                                                only_dirty=False)  # working properly at the moment
 
 
 # filename: str : Windows file fullname of the asset you want to import
@@ -289,22 +303,20 @@ def buildAnimationImportOptions(skeleton_path=''):
     options = unreal.FbxImportUI()
     # unreal.FbxImportUI
     options.set_editor_property('import_animations', True)
-    options.skeleton = unreal.load_asset(skeleton_path)
+    #options.skeleton = unreal.load_asset(skeleton_path)
+    options.set_editor_property("skeleton", unreal.load_asset(skeleton_path))
     # unreal.FbxMeshImportData
     options.anim_sequence_import_data.set_editor_property('import_translation', unreal.Vector(0.0, 0.0, 0.0))
     options.anim_sequence_import_data.set_editor_property('import_rotation', unreal.Rotator(0.0, 0.0, 0.0))
     options.anim_sequence_import_data.set_editor_property('import_uniform_scale', 1.0)
     # unreal.FbxAnimSequenceImportData
-    options.anim_sequence_import_data.set_editor_property('animation_length', unreal.FBXAnimationLengthImportType.FBXALIT_EXPORTED_TIME)
+    options.anim_sequence_import_data.set_editor_property('animation_length',
+                                                          unreal.FBXAnimationLengthImportType.FBXALIT_EXPORTED_TIME)
     options.anim_sequence_import_data.set_editor_property('remove_redundant_keys', False)
     return options
 
 
-
-
 # Cpp ########################################################################################################################################################################################
-
-
 
 
 # return: str List : The asset paths that are currently selected
