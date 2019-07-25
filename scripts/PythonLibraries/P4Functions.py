@@ -1,5 +1,6 @@
 import site
 site.addsitedir(r"C:\Python27\Lib\site-packages")
+site.addsitedir(r"\\vt_server1\ANIMATION\global\Lib\site-packages")
 from P4 import P4, P4Exception
 
 
