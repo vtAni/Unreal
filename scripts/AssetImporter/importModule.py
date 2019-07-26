@@ -30,14 +30,14 @@ class AssetImport():
             skeleton = None
         return skeleton
 
-    def doImport(self):
+    def doImport(self, filesave):
         fileListDic = self.get_fileList()
         for fbxfile in fileListDic:
             clientFile = fileListDic[fbxfile]["clientFile"]
             animation_path = "/".join([ANIM_SEQUENCE_PATH, self.getCutNumber(clientFile)[0]])
             skeleton = self.getSkeleton("/".join([animation_path, os.path.splitext(os.path.basename(clientFile))[0]]))
             # skeleton = '/Game/VisualTech/Character/temp/JinF/mesh/JinF_Archer_Skeleton'
-            animation_task = AssetFunctions.buildImportTask(clientFile, animation_path,
+            animation_task = AssetFunctions.buildImportTask(clientFile, animation_path, filesave,
                                                             AssetFunctions.buildAnimationImportOptions(skeleton))
 
             AssetFunctions.executeImportTasks([animation_task])

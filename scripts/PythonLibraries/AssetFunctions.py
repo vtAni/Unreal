@@ -237,14 +237,14 @@ def savePackages(packages=[], show_dialog=False):
 # destination_path: str : Asset path
 # option: obj : Import option object. Can be None for assets that does not usually have a pop-up when importing. (e.g. Sound, Texture, etc.)
 # return: obj : The import task object
-def buildImportTask(filename='', destination_path='', options=None):
+def buildImportTask(filename='', destination_path='', filesave=True, options=None):
     task = unreal.AssetImportTask()
     task.set_editor_property('automated', True)
     task.set_editor_property('destination_name', '')
     task.set_editor_property('destination_path', destination_path)
     task.set_editor_property('filename', filename)
     task.set_editor_property('replace_existing', True)
-    task.set_editor_property('save', True)
+    task.set_editor_property('save', filesave)
     task.set_editor_property('options', options)
     return task
 
