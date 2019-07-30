@@ -1,3 +1,4 @@
+import os
 import site
 site.addsitedir(r"C:\Python27\Lib\site-packages")
 site.addsitedir(r"\\vt_server1\ANIMATION\global\Lib\site-packages")
@@ -8,6 +9,20 @@ class VT_P4Class():
     def __init__(self):
         self.p4 = P4()
         self.p4.connect()
+
+    def getLatestFile(self, fileState):
+        latestFile = None
+        latestTime = 0
+        for filename in fileState:
+            clientFile = fileState[filename]["clientFile"]
+            # modTime = int(fileState[filename]["headModTime"])
+            # headTime = int(fileState[clientFile]["headModTime"])
+            # print filename, modTime, headTime
+            modTime = os.path.getctime(clientFile)
+            if latestTime < modTime:
+                latestTime = modTime
+                latestFile = filename
+        return latestFile
 
     def getChangedFiles(self):
         changes = self.p4.fetch_change()
@@ -25,10 +40,8 @@ class VT_P4Class():
             fileState[fbxfile] = self.p4.run_fstat(fbxfile)[0]
         return fileState
 
-            # for i in fileState:
-            #     for j in i:
-            #         print j, " ", i[j]
 
-    # changelist = p4.run_changes('//Resource/BnS/BnS_WCS19/2_FinalData/Animation...@2019/07,@now')
-    # for c in changelist:
-    #       print c
+
+# cls = VT_P4Class()
+# fileInfo = cls.getChangedFileInfo()
+# print cls.getLatestFile(fileInfo)

@@ -12,7 +12,7 @@ class AssetImport():
     def __init__(self):
         self.VTP4 = P4Functions.VT_P4Class()
 
-    def get_fileList(self):
+    def get_fileInfoList(self):
         changeFileInfoDic = self.VTP4.getChangedFileInfo()
         return changeFileInfoDic
 
@@ -30,8 +30,18 @@ class AssetImport():
             skeleton = None
         return skeleton
 
-    def doImport(self, filesave):
-        fileListDic = self.get_fileList()
+    def doImport(self, filesave, getLatestFile):
+        fileListDic = self.get_fileInfoList()
+        latestfilename = None
+        latestfileinfo = None
+
+        if getLatestFile:
+            fileListDic = {}
+            tempFileInfo = self.get_fileInfoList()
+            latestfilename = self.VTP4.getLatestFile(tempFileInfo)
+            latestfileinfo = tempFileInfo[latestfilename]
+            fileListDic[latestfilename] = latestfileinfo
+
         for fbxfile in fileListDic:
             clientFile = fileListDic[fbxfile]["clientFile"]
             animation_path = "/".join([ANIM_SEQUENCE_PATH, self.getCutNumber(clientFile)[0]])
@@ -41,3 +51,6 @@ class AssetImport():
                                                             AssetFunctions.buildAnimationImportOptions(skeleton))
 
             AssetFunctions.executeImportTasks([animation_task])
+
+        if getLatestFile:
+            print latestfilename, " ", latestfileinfo
