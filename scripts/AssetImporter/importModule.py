@@ -35,6 +35,7 @@ class AssetImport():
         latestfilename = None
         latestfileinfo = None
 
+        if not fileListDic: return
         if getLatestFile:
             fileListDic = {}
             tempFileInfo = self.get_fileInfoList()

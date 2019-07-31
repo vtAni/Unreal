@@ -26,6 +26,8 @@ class VT_P4Class():
 
     def getChangedFiles(self):
         changes = self.p4.fetch_change()
+        if "Files" not in changes.keys():
+            return None
         changedFiles = changes["Files"]
         fbxFiles = list()
         for cf in changedFiles:
@@ -36,8 +38,9 @@ class VT_P4Class():
     def getChangedFileInfo(self):
         fileState = dict()
         fbxFiles = self.getChangedFiles()
-        for fbxfile in fbxFiles:
-            fileState[fbxfile] = self.p4.run_fstat(fbxfile)[0]
+        if fbxFiles:
+            for fbxfile in fbxFiles:
+                fileState[fbxfile] = self.p4.run_fstat(fbxfile)[0]
         return fileState
 
 
