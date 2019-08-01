@@ -1,8 +1,20 @@
+"""
+TODO
+get file modified time.
+
+save file imported time.
+get file imported time.
+
+"""
+
 import re, os
+import time
 import unreal
 from PythonLibraries import AssetFunctions
 reload(AssetFunctions)
-from PythonLibraries import P4Functions
+import P4Functions, history
+
+
 reload(P4Functions)
 
 
@@ -30,18 +42,28 @@ class AssetImport():
             skeleton = None
         return skeleton
 
+
+    def getProjectFilepath(self, fullpath=True):
+        if fullpath:
+            return unreal.Paths.get_project_file_path()
+        else:
+            return os.path.basename(unreal.Paths.get_project_file_path())
+
+
     def doImport(self, filesave, getLatestFile):
         fileListDic = self.get_fileInfoList()
         latestfilename = None
         latestfileinfo = None
+        project = self.getProjectFilepath(fullpath=False)
 
         if not fileListDic: return
         if getLatestFile:
             fileListDic = {}
             tempFileInfo = self.get_fileInfoList()
-            latestfilename = self.VTP4.getLatestFile(tempFileInfo)
-            latestfileinfo = tempFileInfo[latestfilename]
-            fileListDic[latestfilename] = latestfileinfo
+            latestfilename = self.VTP4.getLatestFile(project, tempFileInfo)
+            for latestfile in latestfilename:
+                latestfileinfo = tempFileInfo[latestfile]
+                fileListDic[latestfile] = latestfileinfo
 
         for fbxfile in fileListDic:
             clientFile = fileListDic[fbxfile]["clientFile"]
@@ -52,6 +74,8 @@ class AssetImport():
                                                             AssetFunctions.buildAnimationImportOptions(skeleton))
 
             AssetFunctions.executeImportTasks([animation_task])
+            imported_time = time.time()
+            history.writeHistory(project, fbxfile, imported_time)
 
         if getLatestFile:
             print latestfilename, " ", latestfileinfo
