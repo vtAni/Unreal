@@ -71,8 +71,8 @@ class AssetImport():
 
         for fbxfile in fileListDic:
             clientFile = fileListDic[fbxfile]["clientFile"]
-            animation_path = "/".join([ANIM_SEQUENCE_PATH, self.getCutNumber(clientFile)[0]])
-            # animation_path = "/".join([ANIM_SEQUENCE_PATH, self.getCharacterName(clientFile)])
+            # animation_path = "/".join([ANIM_SEQUENCE_PATH, self.getCutNumber(clientFile)[0]])
+            animation_path = "/".join([ANIM_SEQUENCE_PATH, self.getCharacterName(clientFile)])
             skeleton = self.getSkeleton("/".join([animation_path, os.path.splitext(os.path.basename(clientFile))[0]]))
             if not skeleton:
                 continue
