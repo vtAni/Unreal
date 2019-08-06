@@ -1,3 +1,4 @@
+#encoding=utf-8
 """
 TODO
 get file modified time.
@@ -7,7 +8,8 @@ get file imported time.
 
 """
 
-import re, os
+import re
+import os
 import time
 import unreal
 from PythonLibraries import AssetFunctions
@@ -22,6 +24,7 @@ ANIM_SEQUENCE_PATH = "/Game/VisualTech/Animation"
 
 class AssetImport():
     def __init__(self):
+        # 수정한지 30일이 지난 프로젝트 히스토리 지우기.
         self.VTP4 = P4Functions.VT_P4Class()
 
     def get_fileInfoList(self):
@@ -29,12 +32,22 @@ class AssetImport():
         return changeFileInfoDic
 
     def getCutNumber(self, fbxfile):
+        """
+        파일네임에서 s00_c000 의 규칙을 갖는 스트링 찾기.
+        :type fbxfile: str
+        :rtype: str
+        """
         filename = os.path.basename(fbxfile)
         p = re.compile("s\d+_c\d+")
         scene_cut = p.findall(filename)
         return scene_cut
 
     def getCharacterName(self, fbxfile):
+        """
+        s00_c000_cha_action 형식의 파일네임에서 cha 스트링 찾기.
+        :type fbxfile: str
+        :rtype: str
+        """
         filename = os.path.basename(fbxfile)
         filename_split = filename.split("_")
         return filename_split[2]
