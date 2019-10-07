@@ -40,6 +40,7 @@ class AssetImport():
         filename = os.path.basename(fbxfile)
         p = re.compile("s\d+_c\d+")
         scene_cut = p.findall(filename)
+        unreal.log(fbxfile)
         return scene_cut
 
     def getCharacterName(self, fbxfile):
