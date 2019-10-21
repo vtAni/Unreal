@@ -76,9 +76,10 @@ def writeHistory(project, filename, imported_time):
         _log = getHistory()
     else:
         _log = LOG
-    if not _log["Projects"].has_key(project):
+    if not _log["Projects"]:
         _log["Projects"] = {project: {"Imported_files": dict(), "Last_edited": float()}}
-
+    if not _log["Projects"].has_key(project):
+        _log["Projects"][project] = {"Imported_files": dict(), "Last_edited": float()}
     if not _log["Projects"][project].has_key("Last_edited"):
         _log["Projects"][project]["Last_edited"] = float()
 
@@ -87,4 +88,5 @@ def writeHistory(project, filename, imported_time):
 
     _log["Projects"][project]["Imported_files"][filename]["imported_time"] = imported_time
     _log["Projects"][project]["Last_edited"] = imported_time
+    print _log
     writeJson(_log, HISTORY_FILE_PATH)
