@@ -2,10 +2,9 @@ import os
 import time
 import datetime
 import json
-import getpass
 
-HISTORY_FILE_PATH = "C:/Users/{USER}/Documents/visual_tech/log/UEAnimImporter.history"
-HISTORY_FILE_PATH = HISTORY_FILE_PATH.format(USER=getpass.getuser())
+HISTORY_FILE_PATH = "{userexpand}/Documents/visual_tech/log/UEAnimImporter.history"
+HISTORY_FILE_PATH = HISTORY_FILE_PATH.format(userexpand=os.path.expanduser("~").replace("\\", "/"))
 
 
 LOG = {
