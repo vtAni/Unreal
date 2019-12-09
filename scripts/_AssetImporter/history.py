@@ -3,6 +3,7 @@ import time
 import datetime
 import json
 
+EXPORT_DATA_FILE = os.path.expanduser("~").replace("\\", "/") + "/Documents/visual_tech/log/exportdata.hvst"
 HISTORY_FILE_PATH = "{userexpand}/Documents/visual_tech/log/UEAnimImporter.history"
 HISTORY_FILE_PATH = HISTORY_FILE_PATH.format(userexpand=os.path.expanduser("~").replace("\\", "/"))
 
@@ -67,6 +68,13 @@ def getImportedTime(project, filename):
     imported_time = file_info["imported_time"]
     return imported_time
 
+def getExportData():
+    if os.path.exists(EXPORT_DATA_FILE):
+        _data = readJson(EXPORT_DATA_FILE)
+        return _data
+    else:
+        return None
+
 
 def writeHistory(project, filename, imported_time):
     if not os.path.exists(os.path.dirname(HISTORY_FILE_PATH)):
@@ -87,5 +95,4 @@ def writeHistory(project, filename, imported_time):
 
     _log["Projects"][project]["Imported_files"][filename]["imported_time"] = imported_time
     _log["Projects"][project]["Last_edited"] = imported_time
-    print _log
     writeJson(_log, HISTORY_FILE_PATH)

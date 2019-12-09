@@ -46,12 +46,19 @@ class AssetImport():
         :type fbxfile: str
         :rtype: str
         """
+        fbxfile = fbxfile.replace("\\", "/")
+        exportdata = history.getExportData()
+        if exportdata:
+            unrealProject = os.path.splitext(self.getProjectFilepath(fullpath=False))[0]
+            if unrealProject in exportdata["Projects"]:
+                characterName = exportdata["Projects"][unrealProject]["Filename"][fbxfile]["Character"]
+                return characterName
+
         filename = os.path.basename(fbxfile)
         filename_split = filename.split("_")
         characterName = filename_split[2]
-        if filename_split[2] == "X":
+        if characterName == "X":
             characterName = filename_split[3]
-
         return characterName
 
     def getSkeleton(self, assetname):
@@ -94,10 +101,10 @@ class AssetImport():
             # skeleton = '/Game/VisualTech/Character/temp/JinF/mesh/JinF_Archer_Skeleton'
             animation_task = AssetFunctions.buildImportTask(clientFile, animation_path, filesave,
                                                             AssetFunctions.buildAnimationImportOptions(skeleton))
-
             AssetFunctions.executeImportTasks([animation_task])
             imported_time = time.time()
             history.writeHistory(project, fbxfile, imported_time)
 
-        if getLatestFile:
-            print latestfilename, " ", latestfileinfo
+
+        # if getLatestFile:
+        #     print latestfilename, " ", latestfileinfo
