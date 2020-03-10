@@ -9,6 +9,17 @@ class VT_P4Class():
     def __init__(self):
         self.p4 = P4()
         self.p4.connect()
+        self.CHARSET = ["utf8",
+                   "none"]
+        self.charsetIndex = self.CHARSET.index(self.p4.charset)
+
+    def fetchChange(self):
+        try:
+            changes = self.p4.fetch_change()
+        except P4Exception as e:
+            self.p4.charset = self.CHARSET[int(not self.charsetIndex)]
+            changes = self.p4.fetch_change()
+        return changes
 
     def getLatestFile(self, project, fileState):
         latestFile = list()
@@ -29,7 +40,7 @@ class VT_P4Class():
         return latestFile
 
     def getChangedFiles(self):
-        changes = self.p4.fetch_change()
+        changes = self.fetchChange()
         if "Files" not in changes.keys():
             return None
         changedFiles = changes["Files"]
