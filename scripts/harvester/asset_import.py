@@ -1,4 +1,3 @@
-
 import os
 import unreal
 
@@ -33,33 +32,31 @@ class AssetImport():
             options.mesh_type_to_import = unreal.FBXImportType.FBXIT_SKELETAL_MESH
             options.skeletal_mesh_import_data.import_mesh_lo_ds = bool(self.asset_data.get("lods"))
 
-            assetname = self.asset_data.get("skeletal_mesh_game_path")
-            if assetname.find("/") != -1:
-                unreal.log(unreal.EditorAssetLibrary.does_asset_exist(assetname))
-                if unreal.EditorAssetLibrary.does_asset_exist(assetname):
-                    asset = unreal.load_asset(assetname)
+            asset_name = self.asset_data.get("skeletal_mesh_game_path")
+            if asset_name.find("/") != -1:
+                unreal.log(unreal.EditorAssetLibrary.does_asset_exist(asset_name))
+                if unreal.EditorAssetLibrary.does_asset_exist(asset_name):
+                    asset = unreal.load_asset(asset_name)
                     skeleton_asset_name = os.path.splitext(asset.get_editor_property("skeleton").get_path_name())[0]
                     skeleton_asset = unreal.load_asset(skeleton_asset_name)
                     unreal.log(skeleton_asset)
 
                     if skeleton_asset:
                         options.set_editor_property("skeleton", skeleton_asset)
-
         # if this is an static mesh import
-        if not bool(self.asset_data.get("skeletal_mesh")):
+        elif not bool(self.asset_data.get("skeletal_mesh")):
             options.static_mesh_import_data.normal_import_method = unreal.FBXNormalImportMethod.FBXNIM_IMPORT_NORMALS_AND_TANGENTS
             options.mesh_type_to_import = unreal.FBXImportType.FBXIT_STATIC_MESH
             options.static_mesh_import_data.import_mesh_lo_ds = bool(self.asset_data.get("lods"))
 
         # if this is an animation import
         if bool(self.asset_data.get("animation")):
-            assetname = self.asset_data.get("skeletal_mesh_game_path")
-            if unreal.EditorAssetLibrary.does_asset_exist(assetname):
-                asset = unreal.load_asset(assetname)
+            asset_name = self.asset_data.get("skeletal_mesh_game_path")
+            if unreal.EditorAssetLibrary.does_asset_exist(asset_name):
+                asset = unreal.load_asset(asset_name)
                 skeleton_asset_name = os.path.splitext(asset.get_editor_property("skeleton").get_path_name())[0]
                 skeleton_asset = unreal.load_asset(skeleton_asset_name)
                 unreal.log(skeleton_asset)
-                # '    skeleton_asset = unreal.load_asset(r"{0}")'.format(asset_data.get("skeleton_game_path")),
 
                 # if a skeleton can be loaded from the provided path
                 if skeleton_asset:
@@ -67,7 +64,8 @@ class AssetImport():
                     options.set_editor_property("original_import_type", unreal.FBXImportType.FBXIT_ANIMATION)
                     options.set_editor_property("mesh_type_to_import", unreal.FBXImportType.FBXIT_ANIMATION)
                 else:
-                    raise RuntimeError("Unreal could not find a skeleton here: {0}".format(self.asset_data.get("skeletal_mesh_game_path")))
+                    raise RuntimeError("Unreal could not find a skeleton here: {0}".format(
+                        self.asset_data.get("skeletal_mesh_game_path")))
         return options
 
     def do_import(self):
@@ -76,8 +74,8 @@ class AssetImport():
         import_task.destination_path = self.asset_data.get("game_path")
         import_task.automated = not bool(self.asset_data.get("advanced_ui_import"))
         import_task.replace_existing = True
-        import_task.save = self.asset_data.get("file_save")
-        
+        import_task.save = False#self.asset_data.get("file_save")
+
         # abc import options
         if self.asset_data.get("abc_import"):
             options = self.abc_import_option()
@@ -88,9 +86,7 @@ class AssetImport():
         import_task.options = options
         unreal.AssetToolsHelpers.get_asset_tools().import_asset_tasks([import_task])
         skeleton_asset_name = os.path.splitext(options.get_editor_property("skeleton").get_path_name())[0]
-        skeleton_asset = unreal.load_asset(skeleton_asset_name)
 
-        if skeleton_asset:
-            unreal.log('SAVE SKELETON ASSET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            unreal.log(skeleton_asset)
-            unreal.EditorAssetLibrary.save_asset(skeleton_asset)
+        unreal.log(skeleton_asset_name)
+        unreal.EditorAssetLibrary.save_asset(skeleton_asset_name)
+
